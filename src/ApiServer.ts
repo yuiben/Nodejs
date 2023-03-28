@@ -22,6 +22,7 @@ class ApiServer extends Server {
   }
 
   private async initServer(): Promise<void> {
+
     dataSource.initialize()
       .then(() => {
         console.log("Data Source has been initialized!")
@@ -43,7 +44,7 @@ class ApiServer extends Server {
     for (const name in controllers) {
       if (Object.prototype.hasOwnProperty.call(controllers, name)) {
         // eslint-disable-next-line
-        const controller: any = Container.get<object>((controllers as any)[name]);
+        const controller = Container.get((controllers as any)[name]);
         ctlrInstances.push(controller);
       }
     }
@@ -52,16 +53,19 @@ class ApiServer extends Server {
   }
 
   public async start(port: number): Promise<void> {
-    const funcName: string = 'start';
+    const funcName = 'start';
 
-    await this.initServer();
+    try {
+      await this.initServer();
 
-    this.appserver = http.createServer(this.app);
-    this.appserver.setTimeout(parseInt(<string>process.env.SERVER_TIMEOUT, 10));
+      this.appserver = this.app.listen(port, () => {
+        Log.info(this.className, funcName, `Server started on port: ${port}`);
+      });
 
-    this.appserver.listen(port, () => {
-      Log.info(this.className, funcName, `Server started on port: ${port}`);
-    });
+      this.appserver.setTimeout(parseInt(<string>process.env.SERVER_TIMEOUT, 10));
+    } catch (ex) {
+      Log.info(this.className, funcName, ex);
+    }
   }
 
   public stop(): void {

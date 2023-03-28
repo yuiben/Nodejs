@@ -16,7 +16,7 @@ if (!process.env.PORT) {
 const PORT: number = parseInt(process.env.PORT as string, 10);
 
 //------------------------------------------------------------------
-const app: express.Express = express();
+const app = express();
 
 //------------------------------------------------------------------
 /**
@@ -53,9 +53,5 @@ interface WebpackHotModule {
 declare const module: WebpackHotModule;
 if (module.hot) {
   module.hot.accept();
-
-  // eslint - disable - next - line
-  module.hot.dispose((data: any) => {
-    apiServer?.stop();
-  });
+  module.hot.dispose(() => apiServer?.stop());
 }

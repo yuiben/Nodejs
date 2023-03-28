@@ -3,10 +3,21 @@ import { dataSource } from "../../ormconfig";
 import { ResponseMsg } from "../constant/ReponseMsg";
 import { Class } from "../entities/Class";
 import { ResponseBase } from "../models/base/ResponseBase";
-import { CreateClassReponse, CreateClassRequest } from "../models/class/createClass/CreateClassRequest";
+import { CreateClassReponse, CreateClassRequest } from "../models/class/CreateClassRequest";
+import { UpdateClassRequest, UpdateClassResponse } from "../models/class/UpdateClassRequest";
+import ValidateException from '../exceptions/ValidateException';
+import { ErrorCode } from "../constant/ErrorCode";
+import { ValidateService } from "./ValidateService";
+import { DetailClassResponse } from "../models/class/DetailClassResponse";
 
 @Service()
 export class ClassService {
+    private validateService: ValidateService;
+
+    constructor() {
+        this.validateService = new ValidateService();
+    }
+
     public async create(classReq: CreateClassRequest): Promise<ResponseBase<CreateClassReponse> | undefined> {
         //-----------------------------------------------------------------
         // create user data
@@ -25,6 +36,47 @@ export class ClassService {
 
         console.log(result)
 
+        return result;
+    }
+
+    public async update(classReq: UpdateClassRequest): Promise<ResponseBase<UpdateClassResponse> | undefined> {
+        const classId: string = classReq.id
+        const classIntance: Class = await dataSource.manager.findOneBy(Class, { id: classId }).catch((ex) => {
+            throw ex;
+        });
+
+        if (!classIntance) throw this.validateService.inValid(!classIntance)
+
+        await dataSource.manager.update(Class, { id: classReq.id }, classReq).catch((ex) => {
+            throw ex;
+        });
+
+        //Get Data
+
+        const result: ResponseBase<CreateClassReponse> = new ResponseBase<CreateClassReponse>();
+
+        result.data = classReq
+        result.status = ResponseMsg.SUCCEED
+
+        return result;
+    }
+
+    public async getOneClass(id: string): Promise<ResponseBase<DetailClassResponse>> {
+        console.log('asda')
+        console.log(id)
+
+        const classInstance = await dataSource.manager
+            .createQueryBuilder(Class, "class")
+            .where("class.id = :id", { id: id })
+            .getOne().catch((ex) => {
+                throw ex;
+            });
+        console.log(classInstance)
+        if (!classInstance) throw this.validateService.inValid(!classInstance)
+
+        const result: ResponseBase<DetailClassResponse> = new ResponseBase<DetailClassResponse>();
+
+        result.data = classInstance;
         return result;
     }
 }

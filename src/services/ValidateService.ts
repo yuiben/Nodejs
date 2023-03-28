@@ -19,7 +19,7 @@ export class ValidateService {
   protected responseField: string;
   protected error: VldItem = null;
 
-  constructor() {}
+  constructor() { }
 
   // eslint-disable-next-line
   public init(data: any, field: string, responseField?: string): ValidateService {
@@ -121,6 +121,11 @@ export class ValidateService {
   //====================================================================================================
   public isExist(isNotValid: boolean): ValidateService {
     if (isNotValid) this.createResData(ValidateType.IS_EXIST);
+    return this;
+  }
+
+  public inValid(isNotValid: boolean): ValidateService {
+    if (isNotValid) this.createResData(ValidateType.INVALID);
     return this;
   }
 
