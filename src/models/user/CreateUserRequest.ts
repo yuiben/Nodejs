@@ -2,7 +2,8 @@ import { CreateUserInfoRequest } from "../userInfo/CreateUserInfoRequest";
 
 export interface CreateUserRequest {
     name: string;
-    userInfo: CreateUserInfoRequest
+    fullname: string;
+    birthday: Date;
     password: string;
     email: string;
     role: number;

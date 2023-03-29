@@ -7,10 +7,10 @@ export class UserInfo extends BaseModel {
   @Column()
   fullname: string
 
-  @Column()
-  birthday: string
+  @Column({ type: 'date' })
+  birthday: Date
 
-  @OneToOne(() => User, (user) => user.userInfo)
+  @OneToOne(() => User, (user) => user.userInfo, { onDelete: "CASCADE" })
   @JoinColumn({ name: "user_id" })
   user: User
 }

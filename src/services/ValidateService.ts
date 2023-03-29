@@ -113,6 +113,7 @@ export class ValidateService {
 
   //Check format: yyyy/MM/dd  and must be existing date
   public isValidDate(format: string): ValidateService {
+    console.log(this.value)
     if (this.value === undefined || this.value === null || this.value === '') return this;
     if (ValidateUtil.isValidDate(this.value, format) === false) this.createResData(ValidateType.INVALID);
     return this;

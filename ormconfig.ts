@@ -1,4 +1,3 @@
-import console from "console";
 import { DataSource, DataSourceOptions } from "typeorm";
 import * as entities from './src/entities/index';
 import * as migrations from './src/migrations/index';

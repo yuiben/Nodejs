@@ -9,6 +9,7 @@ import ValidateException from '../exceptions/ValidateException';
 import { ErrorCode } from "../constant/ErrorCode";
 import { ValidateService } from "./ValidateService";
 import { DetailClassResponse } from "../models/class/DetailClassResponse";
+import { ListAllClassResponse } from "../models/class/ListAllClass";
 
 @Service()
 export class ClassService {
@@ -57,6 +58,20 @@ export class ClassService {
 
         result.data = classReq
         result.status = ResponseMsg.SUCCEED
+
+        return result;
+    }
+
+    public async listAllClass(): Promise<ResponseBase<ListAllClassResponse[]>> {
+        const classes = await dataSource.manager
+            .createQueryBuilder()
+            .select(["class.id", "class.className"])
+            .from(Class, "class")
+            .getMany()
+
+        const result: ResponseBase<ListAllClassResponse[]> = new ResponseBase<ListAllClassResponse[]>();
+
+        result.data = classes;
 
         return result;
     }

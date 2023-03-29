@@ -1,5 +1,4 @@
-export class LoginReq {
+export interface LoginReq {
   email: string;
-  pwd: string;
-  isAdmin: boolean;
+  password: string;
 }

@@ -13,6 +13,18 @@ export class ClassController {
   private className = 'ClassController';
   constructor(private readonly classService: ClassService) { }
 
+  @Get()
+  private async listClass(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const result = await this.classService.listAllClass().catch((ex) => {
+        throw ex;
+      });
+      res.status(200).json(result);
+    } catch (ex) {
+      next(ex);
+    }
+  }
+
   @Get(':id')
   private async detail(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {

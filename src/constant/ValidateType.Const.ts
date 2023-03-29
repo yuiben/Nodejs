@@ -10,7 +10,8 @@ export const enum ValidateType {
   IS_NUMBER = 'IsNumber',
   IS_EMAIL = 'IsEmail',
   INVALID = 'Invalid',
-  IS_EXIST = 'IsExist'
+  IS_EXIST = 'IsExist',
+  NOT_FOUND = 'NotFound'
 }
 
 export const enum ValidateMode {

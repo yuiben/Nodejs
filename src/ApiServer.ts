@@ -7,8 +7,9 @@ import { Request, Response, NextFunction } from 'express';
 import { errorHandler } from './middleware/error.middleware';
 import { notFoundHandler } from './middleware/notFound.middleware';
 import 'reflect-metadata';
-import Container from 'typedi';
 import { dataSource } from '../ormconfig';
+import { Container } from "typeorm-typedi-extensions";
+import { useContainer } from "typeorm";
 
 class ApiServer extends Server {
   private className = 'ApiServer';
@@ -22,7 +23,7 @@ class ApiServer extends Server {
   }
 
   private async initServer(): Promise<void> {
-
+    useContainer(Container);
     dataSource.initialize()
       .then(() => {
         console.log("Data Source has been initialized!")
